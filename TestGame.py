@@ -92,8 +92,20 @@ class simulate:
 		DISPLAYSURF.blit(infoSurf,infoRect)
 		pygame.display.update()
 		pygame.time.wait(500) 
+		#sound files here
+		'''try:
+	            pygame.mixer.init()
+       		except Exception, err:
+          	  self.sound=False
+            	print 'error with sound', err
+		pygame.mixer.init()		
+		if sound :
+			BEEP1=pygame.mixer.Sound('/sounds/beep1.ogg')
+			BEEP2=pygame.mixer.Sound('/sounds/beep2.ogg')
+			BEEP3=pygame.mixer.Sound('/sounds/beep3.ogg')
+			BEEP4=pygame.mixer.Sound('/sounds/beep4.ogg')
 		
-		
+		'''
 		#intialize
 		pattern =[] # keeps the track of the pattern played!	
 		currentStep = 0 #iterator for pattern list 
@@ -116,7 +128,7 @@ class simulate:
 			
 			DISPLAYSURF.blit(infoSurf, infoRect)
 			pygame.display.update() #checkingg!!
-			#checkForQuit()
+			checkForQuit()
 			# Pump GTK messages.
             		while Gtk.events_pending():
                 		Gtk.main_iteration()
@@ -137,11 +149,10 @@ class simulate:
 			if not waitingForInput: #play pattern
 				pygame.display.update()
 				pygame.time.wait(1000)
-				#pattern=[]
-				for x in range(0,score+1):
-					pattern.append(random.choice((YELLOW, RED, BLUE, GREEN)))
-					flashButtonAnnimation(pattern[x])
-					pygame.time.wait(FLASHDELAY)					
+				pattern.append(random.choice((YELLOW, BLUE, RED, GREEN)))
+           			for button in pattern:
+			                flashButtonAnnimation(button)
+                			pygame.time.wait(FLASHDELAY)					
 				
 				waitingForInput=True
 			else: #wait for player input
@@ -153,7 +164,7 @@ class simulate:
 					if currentStep== len(pattern):
 						changeBackgroundAnnimation()
 						score+=1
-						pattern=[]
+						#pattern=[]
 						waitingForInput= False #resetting
 						currentStep = 0 #resetting
 				elif (clickedButton and clickedButton != pattern[currentStep]) or (currentStep!=0 and time.time() - lastClickTime > TIMEOUT): #pushed wrong button or time out!!!
@@ -207,7 +218,7 @@ def flashButtonAnnimation1(color, animationSpeed = 50):
 		#sound.play()
 		for start, end, step in ((0,255,1),(255,0,-1)):
 			for alpha in range (start, end, animationSpeed * step):
-				#checkForQuit()
+				checkForQuit()
 				DISPLAYSURF.blit(origSurf,(0, 0))
 				flashSurf.fill((r, g, b, alpha))
 				DISPLAYSURF.blit(flashSurf, rectangle.topleft)
@@ -239,7 +250,7 @@ def flashButtonAnnimation(color, animationSpeed = 50):
 		#sound.play()
 		for start, end, step in ((0,255,1),(255,0,-1)):
 			for alpha in range (start, end, animationSpeed * step):
-				#checkForQuit()
+				checkForQuit()
 				DISPLAYSURF.blit(origSurf,(0, 0))
 				flashSurf.fill((r, g, b, alpha))
 				DISPLAYSURF.blit(flashSurf, rectangle.topleft)
@@ -259,7 +270,7 @@ def changeBackgroundAnnimation(animationSpeed = 40):
 		newBgSurf=newBgSurf.convert_alpha()
 		r, g, b= newBgColor
 		for alpha in range (0, 255, animationSpeed):
-			#checkForQuit()
+			checkForQuit()
 			DISPLAYSURF.fill(bgColor)
 			newBgSurf.fill((r, g, b,alpha))
 			DISPLAYSURF.blit(newBgSurf,(0, 0))
@@ -287,7 +298,7 @@ def gameOverAnnimation(color= WHITE, animationSpeed= 50):
 		for i in range(3):
 			for start, end, step in ((0, 255, 1), (255, 0, -1)):
 				for alpha in range(start, end,animationSpeed * step):
-					#checkForQuit()
+					checkForQuit()
 					flashSurf.fill((r, g, b, alpha))
 					DISPLAYSURF.blit(origSurf, (0, 0))
 					DISPLAYSURF.blit(flashSurf, (0, 0))

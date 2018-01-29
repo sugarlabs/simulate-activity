@@ -21,8 +21,11 @@
 from gettext import gettext as _
 
 import sys
-from gi.repository import Gtk
 import pygame
+
+import gi
+gi.require_version('Gtk','3.0')
+from gi.repository import Gtk
 
 import sugar3.activity.activity
 from sugar3.graphics.toolbarbox import ToolbarBox
@@ -50,7 +53,11 @@ class TestActivity(sugar3.activity.activity.Activity):
         self.build_toolbar()
 
         # Build the Pygame canvas.
-        self._pygamecanvas = sugargame.canvas.PygameCanvas(self)
+        self.game.canvas = self._pygamecanvas = \
+            sugargame.canvas.PygameCanvas(self,
+                main=self.game.run,
+                modules=[pygame.display, pygame.font])
+
 
         # Note that set_canvas implicitly calls read_file when
         # resuming from the Journal.
@@ -59,7 +66,6 @@ class TestActivity(sugar3.activity.activity.Activity):
 
         # Start the game running (self.game.run is called when the
         # activity constructor returns).
-        self._pygamecanvas.run_pygame(self.game.run)
 
     def build_toolbar(self):
         toolbar_box = ToolbarBox()
